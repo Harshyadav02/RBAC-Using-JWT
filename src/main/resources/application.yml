@@ -7,3 +7,6 @@ spring:
     username: root
     password: Harsh@123
     
+  jpa:
+    hibernate:
+      ddl-auto: update
