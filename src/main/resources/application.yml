@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: JWT-Based-Spring-Security
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/JWTLearnings?createDatabaseIfNotExist=true
+    username: root
+    password: Harsh@123
+    
