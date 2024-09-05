@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,13 +37,9 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                        .requestMatchers("/signin").permitAll()  // Allow unauthenticated access to /signin endpoint
+                        .requestMatchers("/signin/**","/login/**").permitAll()  // Allow unauthenticated access to /signin endpoint
                         .anyRequest().authenticated());  // All other requests require authentication
-        http.sessionManagement(
-                session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS)  // Set session creation policy to stateless
-        );
+        
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));  // Handle unauthorized access
         http.headers(headers -> headers
                 .frameOptions(frameOptions -> frameOptions
