@@ -16,16 +16,16 @@ import jakarta.servlet.http.HttpServletRequest;
 public class JWTUtils {
 
     
-    private String jwtSecret = "myKey123$$$$$@@@__))((&^%))%^&*\\#(@($*%))";
+    private String jwtSecret = "Mykwyfjdslflshlsfldfhsakljldlfhsflsdfdshfdsfl";
 
     
-    private int jwtExpirationMs = 3000;
+    private int jwtExpirationMs = 300000;
 
     public String getJwtFromHeader(HttpServletRequest request) {
-
         String bearerToken = request.getHeader("Authorization");
+        
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+            return bearerToken.substring(7).trim(); // Remove 'Bearer ' prefix and any whitespace
         }
         return null;
     }
@@ -33,13 +33,14 @@ public class JWTUtils {
     public String generateTokenFromUsername(UserDetails userDetails) {
 
         String username = userDetails.getUsername();
-        return Jwts.builder()
+        String token = Jwts.builder()
             .subject(username)
             .issuedAt(new Date())
             .expiration(new Date(new Date()
             .getTime()+jwtExpirationMs))
             .signWith(key())
             .compact();
+        return token;
     }
 
     public String getUsernameFromJwtToken(String token) {
