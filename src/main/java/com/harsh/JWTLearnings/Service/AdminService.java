@@ -30,7 +30,7 @@ public class AdminService {
         adminDetails.setPassword(passwordEncoder.encode(adminDetails.getPassword()));
         adminRepo.save(adminDetails);
 
-        return new ResponseEntity<>("Admin created sucessfully", HttpStatus.OK);
+        return new ResponseEntity<>("Admin created sucessfully", HttpStatus.CREATED);
     }
 
     public String loginUser(Admin adminDetails) {
