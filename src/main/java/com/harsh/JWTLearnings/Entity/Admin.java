@@ -12,4 +12,6 @@ public class Admin {
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private final String role = "ADMIN";
 }
