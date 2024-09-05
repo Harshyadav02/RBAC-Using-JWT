@@ -1,5 +1,8 @@
 package com.harsh.JWTLearnings.Controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,24 +20,29 @@ public class PublicController {
 
     // method to create new admin
     @PostMapping("/signin/")
-    public ResponseEntity<?> signin(@RequestBody Admin adminDetails){
+    public ResponseEntity<?> signin(@RequestBody Admin adminDetails) {
 
         try {
             return adminService.createAdmin(adminDetails);
         } catch (Exception e) {
-           return new ResponseEntity<>(e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/login/")
-    public ResponseEntity<String> login(@RequestBody Admin adminDetails) {
-        
+    public ResponseEntity<?> login(@RequestBody Admin adminDetails) {
         try {
-            return adminService.loginUser(adminDetails);
+            String token = adminService.loginUser(adminDetails);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+
+            
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
-           return new ResponseEntity<>(e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
 }
