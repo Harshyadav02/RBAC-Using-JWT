@@ -33,13 +33,13 @@ public class AdminService {
         return new ResponseEntity<>("Admin created sucessfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> loginUser(Admin adminDetails) {
+    public String loginUser(Admin adminDetails) {
 
-        return new ResponseEntity<>(jwtUtils
+        return jwtUtils
         .generateTokenFromUsername(
             userDetailsServiceImp
                 .loadUserByUsername(adminDetails
-                        .getEmail())),HttpStatus.OK);
+                        .getEmail()));
     }
 
 }
