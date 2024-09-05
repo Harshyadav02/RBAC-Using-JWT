@@ -24,7 +24,7 @@ public class PublicController {
     private EmployeeService empService;
 
     // method to create new admin
-    @PostMapping("/admin/signin/")
+    @PostMapping("/admin/signup/")
     public ResponseEntity<?> createAdmin(@RequestBody Admin adminDetails) {
 
         try {
@@ -63,7 +63,7 @@ public class PublicController {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/emp/signin/")
+    @PostMapping("/emp/signup/")
     public ResponseEntity<?> createEmployee(@RequestBody Employee empDetails) {
 
         try {

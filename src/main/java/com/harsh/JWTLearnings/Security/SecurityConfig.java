@@ -37,7 +37,7 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                        .requestMatchers("/admin/signin/**","/admin/login/**","emp/login/**","emp/signin/**").permitAll()  // Allow unauthenticated access to /signin endpoint
+                        .requestMatchers("/admin/signup/**","/admin/login/**","emp/login/**","emp/signup/**").permitAll()  // Allow unauthenticated access to /signin endpoint
                         .anyRequest().authenticated());  // All other requests require authentication
         
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));  // Handle unauthorized access
