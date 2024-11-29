@@ -15,21 +15,24 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JWTUtils {
 
-    
-    private String jwtSecret = "Mykwyfjdslflshlsfldfhsakljldlfhsflsdfdshfdsfl";
 
-    
-    private int jwtExpirationMs = 300000;
+    private  String jwtSecret = "Mykwyfjdslflshlsf234567543ldfhsakljldlfhsflsdfdshfdsfl";
 
+
+    private int jwtExpirationMs = 300000;  // token expire time in milisecond
+
+    // method to get token from header
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7).trim(); // Remove 'Bearer ' prefix and any whitespace
+            return bearerToken.substring(14).trim(); // Remove 'Bearer ' prefix and any whitespace
         }
         return null;
     }
 
+
+    // method that genrate token from username
     public String generateTokenFromUsername(UserDetails userDetails) {
 
         String username = userDetails.getUsername();
@@ -43,6 +46,7 @@ public class JWTUtils {
         return token;
     }
 
+    // method that retive username from token
     public String getUsernameFromJwtToken(String token) {
         return Jwts
                 .parser()
@@ -53,12 +57,13 @@ public class JWTUtils {
                 .getSubject();
     }
 
+    // method to validate token
     public boolean validateJwtToken(String authToken){
         try {
             Jwts.parser().verifyWith(key()).build().parseSignedClaims(authToken);
             return true;
         } catch (Exception e) {
-            System.out.println(e.getLocalizedMessage());
+            System.out.println(e.getLocalizedMessage());   
         }return false;
     }
     private SecretKey key() {
