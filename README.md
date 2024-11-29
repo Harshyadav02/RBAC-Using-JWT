@@ -66,7 +66,7 @@ This project demonstrates how to implement JWT (JSON Web Token) based authentica
 - `UserDetailsServiceImp.java`: Custom implementation of UserDetailsService for loading user-specific data during authentication.
 
 ### 6. **Repositories**
-    - `UserRepo.java`: Data access layer for interacting with the user database.
+- `UserRepo.java`: Data access layer for interacting with the user database.
 
 ### 7. **Services**
   - `PublicService.java`: Provides business logic for public actions.
