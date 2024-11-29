@@ -88,17 +88,6 @@ This project demonstrates how to implement JWT (JSON Web Token) based authentica
 
     - `GET /all-users`: Retrieves all user details (admin-only).
     - `DELETE /delete/{email}`: Deletes a user by their email address (admin-only).
-
-## **What after login** 
-- Once you log in and receive the JWT token, follow these steps to access protected resources:
-
-- Copy the JWT token that you received after successful login.
-- Go to the Authorization section of your HTTP client (such as Postman or Insomnia).
-- Select Authorization Type as Bearer Token.
-- Add **Bearer** prefix and Paste the JWT token into the provided field.
-- After this, you will be able to access the endpoints that require authentication by including your JWT token in the 
-![Postman ](postman.png)
-
 ## Configuration
 Before running the application, you need to configure the application.yml file with your database and other environment settings. Below is the configuration section you need to adjust:
 
@@ -138,6 +127,19 @@ Before running the application, you need to configure the application.yml file w
 2. Build and run the application using Maven: `` ./mvnw spring-boot:run``
 3. The application will start on ``http://localhost:8080/user/``.
 **Note - /user is the context-path**
+
+## **What after login** 
+- Once you log in and receive the JWT token, follow these steps to access protected resources:
+
+- Copy the JWT token that you received after successful login.
+- Go to the Authorization section of your HTTP client (such as Postman or Insomnia).
+- Select Authorization Type as Bearer Token.
+- Add **Bearer** prefix and Paste the JWT token into the provided field.
+- After this, you will be able to access the endpoints that require authentication by including your JWT token in the 
+![Postman ](postman.png)
+
+
+
 
 
 
