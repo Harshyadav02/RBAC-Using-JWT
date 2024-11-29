@@ -6,38 +6,31 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.harsh.JWTLearnings.Entity.Admin;
-import com.harsh.JWTLearnings.Entity.Employee;
-import com.harsh.JWTLearnings.Service.AdminService;
-import com.harsh.JWTLearnings.Service.EmployeeService;
+import com.harsh.JWTLearnings.Entity.UserEntity;
+import com.harsh.JWTLearnings.Service.PublicService;
+import com.harsh.JWTLearnings.dto.LoginRequest;
+
+/*  Class contains all public controllers that can be acessed by user without authentication */
 
 @RestController
+
 public class PublicController {
-    @Autowired
-    private AdminService adminService;
+
 
     @Autowired
-    private EmployeeService empService;
+    PublicService publicService;  
 
-    // method to create new admin
-    @PostMapping("/admin/signup/")
-    public ResponseEntity<?> createAdmin(@RequestBody Admin adminDetails) {
+
+    @PostMapping("/login/")
+    public ResponseEntity<?> userLogin(@RequestBody @Validated LoginRequest loginCredentails) {
 
         try {
-            return adminService.createAdmin(adminDetails);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/admin/login/")
-    public ResponseEntity<?> adminLogin(@RequestBody Admin adminDetails) {
-        try {
-            String token = adminService.loginUser(adminDetails);
+            String token = publicService.loginUser(loginCredentails);
 
             Map<String, String> response = new HashMap<>();
             response.put("token", token);
@@ -49,25 +42,12 @@ public class PublicController {
         }
     }
 
-    @PostMapping("/emp/login/")
-    public ResponseEntity<?> empLogin(@RequestBody Employee empDetails) {
-        try {
-            String token = empService.loginUser(empDetails);
 
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @PostMapping("/emp/signup/")
-    public ResponseEntity<?> createEmployee(@RequestBody Employee empDetails) {
+    @PostMapping("/register/")
+    public ResponseEntity<?> createUser(@RequestBody @Validated UserEntity empDetails) {
 
         try {
-            return empService.createEmployee(empDetails);
+            return publicService.createUser(empDetails);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
