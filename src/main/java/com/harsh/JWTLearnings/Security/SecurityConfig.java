@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,13 +38,12 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                        .requestMatchers("/admin/signup/**","/admin/login/**","emp/login/**","emp/signup/**").permitAll()  // Allow unauthenticated access to /signin endpoint
+                        .requestMatchers("/register/**","/login/**").permitAll()  // Allow unauthenticated access to login and register endpoint
                         .anyRequest().authenticated());  // All other requests require authentication
         
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));  // Handle unauthorized access
         http.headers(headers -> headers
-                .frameOptions(frameOptions -> frameOptions
-                        .sameOrigin()  // Allow frames from the same origin
+                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin  // Allow frames from the same origin
                 )
         );
         http.csrf(csrf -> csrf.disable());  // Disable CSRF protection
@@ -52,30 +52,12 @@ public class SecurityConfig {
 
         return http.build();
     }
-
+    
     @Bean
     public UserDetailsService userDetailsService(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);  // Use JdbcUserDetailsManager for user details service
     }
 
-    // @Bean
-    // public CommandLineRunner initData(UserDetailsService userDetailsService) {
-    //     return args -> {
-    //         JdbcUserDetailsManager manager = (JdbcUserDetailsManager) userDetailsService;
-    //         UserDetails user1 = User.withUsername("user1")
-    //                 .password(passwordEncoder().encode("password1"))
-    //                 .roles("USER")
-    //                 .build();
-    //         UserDetails admin = User.withUsername("admin")
-    //                 .password(passwordEncoder().encode("adminPass"))
-    //                 .roles("ADMIN")
-    //                 .build();
-
-    //         JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
-    //         userDetailsManager.createUser(user1);  // Create user1 in the database
-    //         userDetailsManager.createUser(admin);  // Create admin in the database
-    //     };
-    // }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
