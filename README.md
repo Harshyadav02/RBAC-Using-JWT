@@ -1,4 +1,4 @@
-# JWT-Based Spring Security Application
+# RBAC-Using-JWT
 
 This project demonstrates how to implement JWT (JSON Web Token) based authentication and authorization using Spring Security. It includes different user roles (Admin and Employee) and public endpoints for accessing secured resources.
 
@@ -9,6 +9,7 @@ This project demonstrates how to implement JWT (JSON Web Token) based authentica
 ├── mvnw
 ├── mvnw.cmd
 ├── pom.xml
+├── README.md
 └── src
     ├── main
     │   ├── java
@@ -16,16 +17,17 @@ This project demonstrates how to implement JWT (JSON Web Token) based authentica
     │   │       └── harsh
     │   │           └── JWTLearnings
     │   │               ├── Controller
-    │   │               │   ├── AdminController.java
-    │   │               │   ├── EmployeeController.java
-    │   │               │   └── PublicController.java
+    │   │               │   ├── PublicController.java
+    │   │               │   └── UserController.java
+    │   │               ├── dto
+    │   │               │   └── LoginRequest.java
     │   │               ├── Entity
-    │   │               │   ├── Admin.java
-    │   │               │   └── Employee.java
+    │   │               │   └── UserEntity.java
+    │   │               ├── exception
+    │   │               │   └── GlobalExceptionHandler.java
     │   │               ├── JwtBasedSpringSecurityApplication.java
     │   │               ├── Repository
-    │   │               │   ├── AdminRepo.java
-    │   │               │   └── EmployeeRepo.java
+    │   │               │   └── UserRepo.java
     │   │               ├── Security
     │   │               │   ├── AuthEntryPointJwt.java
     │   │               │   ├── AuthTokenFilter.java
@@ -33,19 +35,10 @@ This project demonstrates how to implement JWT (JSON Web Token) based authentica
     │   │               │   ├── SecurityConfig.java
     │   │               │   └── UserDetailsServiceImp.java
     │   │               └── Service
-    │   │                   ├── AdminService.java
-    │   │                   └── EmployeeService.java
+    │   │                   ├── PublicService.java
+    │   │                   └── UserService.java
     │   └── resources
-    │       ├── application.yml
-    │       ├── static
-    │       └── templates
-    └── test
-        └── java
-            └── com
-                └── harsh
-                    └── JWTLearnings
-                        └── JwtBasedSpringSecurityApplicationTests.java
-
+    │       └── application.yml
 
 ```
 
@@ -53,57 +46,90 @@ This project demonstrates how to implement JWT (JSON Web Token) based authentica
 ## Key Components
 
 ### 1. **Controllers**
-- `AdminController.java`: Handles requests related to admin functionalities.
-- `EmployeeController.java`: Manages employee-related operations.
-- `PublicController.java`: Provides public endpoints that don't require authentication.
+- `UserController.java`:Manages endpoints for user-specific actions (profile, updates, etc.).
+- `PublicController.java`: Handles public endpoints accessible without authentication.
 
-### 2. **Entities**
-- `Admin.java`: Represents the admin user entity.
-- `Employee.java`: Represents the employee user entity.
+### 2. **DTO**
+- `LoginRequest.java`: Represents the request structure for login actions.
 
-### 3. **Security**
-- `AuthEntryPointJwt.java`: Handles unauthorized access attempts.
-- `AuthTokenFilter.java`: Intercepts requests and checks for valid JWT tokens.
-- `JWTUtils.java`: Utility class for generating and validating JWT tokens.
-- `SecurityConfig.java`: Configures Spring Security and sets up JWT authentication.
-- `UserDetailsServiceImp.java`: Implements `UserDetailsService` for loading user-specific data during authentication.
 
-### 4. **Repositories**
-- `AdminRepo.java`: Data access layer for admin users.
-- `EmployeeRepo.java`: Data access layer for employees.
+### 3. **Entities**
+- `UserEntity.java`: Represents the user entity in the application, including fields like email, password, and roles.
+### 4. **Exception Handling**
+- `GlobalExceptionHandler.java`: Centralized exception handler for managing errors across the application.
 
-### 5. **Services**
-- `AdminService.java`: Provides admin-specific business logic.
-- `EmployeeService.java`: Contains employee-specific business logic.
+### 5. **Security**
+- `AuthEntryPointJwt.java`:  Handles unauthorized access attempts and customizes error messages.
+- `AuthTokenFilter.java`: ntercepts requests and validates JWT tokens.
+- `JWTUtils.java`: Utility class for generating, parsing, and validating JWT tokens.
+- `SecurityConfig.java`: Configures Spring Security, roles, and JWT authentication..
+- `UserDetailsServiceImp.java`: Custom implementation of UserDetailsService for loading user-specific data during authentication.
+
+### 6. **Repositories**
+    - `UserRepo.java`: Data access layer for interacting with the user database.
+
+### 7. **Services**
+  - `PublicService.java`: Provides business logic for public actions.
+  - `UserService.java`: Manages business logic for user-specific actions (profile, update, delete, etc.).
+
+
+## **Endpoints**
+ - ### Public Endpoints (No Authentication Required)
+
+    - `/register/`: Allows new users to register.
+    - `/login/`: Authenticates users and provides a JWT token.
+-  ### User-Specific Endpoints (Authentication Required)
+    - `GET /profile`: Retrieves the profile details of the logged-in user.
+    - `PUT /update`: Updates the profile details of the logged-in user.
+    - `DELETE /delete-self`: Allows an authenticated user to delete their account.
+
+
+- ### Admin-Specific Endpoints (Admin Authentication Required)
+
+    - `GET /all-users`: Retrieves all user details (admin-only).
+    - `DELETE /delete/{email}`: Deletes a user by their email address (admin-only).
 
 ## Configuration
+Before running the application, you need to configure the application.yml file with your database and other environment settings. Below is the configuration section you need to adjust:
 
-The application configuration is handled in the `application.yml` file, which contains:
-- Database connection details
-- Security related data
+``` sh 
+
+    spring:
+        application:
+            name: RBAC-Using-JWT
+
+        datasource:
+            url: jdbc:mysql://localhost:3306/JWTLearnings?createDatabaseIfNotExist=true
+            username: <username>   # Update with your database username
+            password: <password>  # Update with your database password
+    
+        jpa:
+            hibernate:
+                ddl-auto: update  # Set to 'validate', 'update', 'create', or 'create-drop' based on your environment
+
+        profiles:
+            active: dev  # Change to 'prod' or 'test' based on your active profile
+
+    server:
+        servlet:
+            context-path: /user  # Adjust this path as needed based on your application setup
+
+```
 
 ## Running the Application
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Harshyadav02/JWT-Based-Spring-Security.git
-   cd JWT-Based-Spring-Security
+   git clone https://github.com/Harshyadav02/RBAC-Using-JWT.git
+   cd RBAC-Using-JWT
    ```
 
-2. Update the database configuration in ``src/main/resources/application.yml``
-3. Build and run the application using Maven: `` ./mvnw spring-boot:run``
-4. The application will start on ``http://localhost:8080``.
+2. Build and run the application using Maven: `` ./mvnw spring-boot:run``
+3. The application will start on ``http://localhost:8080/user/``.
+**Note - /user is the context-path**
 
-## **Endpoints**
 
-The following endpoints are accessible without authentication:
-
-- `/admin/signup/**`: Allows unauthenticated users to sign up as an admin.
-- `/admin/login/**`: Allows unauthenticated users to log in as an admin.
-- `/emp/login/**`: Allows unauthenticated users to log in as an employee.
-- `/emp/signup/**`: Allows unauthenticated users to sign up as an employee.
-Rest of the endpoints are secured i.e need **JWT** to access them
 
 ## Contribution
 
