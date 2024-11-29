@@ -7,10 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.harsh.JWTLearnings.Entity.Admin;
-import com.harsh.JWTLearnings.Entity.Employee;
-import com.harsh.JWTLearnings.Repository.AdminRepo;
-import com.harsh.JWTLearnings.Repository.EmployeeRepo;
+import com.harsh.JWTLearnings.Entity.UserEntity;
+import com.harsh.JWTLearnings.Repository.UserRepo;
 
 /**
  * Custom UserDetailsService implementation to load user details from the database.
@@ -19,30 +17,22 @@ import com.harsh.JWTLearnings.Repository.EmployeeRepo;
 public class UserDetailsServiceImp implements UserDetailsService {
 
     @Autowired
-    private EmployeeRepo employeeRepo;
-    @Autowired
-    private AdminRepo adminRepo;
+    private UserRepo userRepo;
+
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
 
-        Admin adminDetail = adminRepo.findByEmail(email);
-        if (adminDetail != null) {
-            // Return UserDetails object with admin details
-            return User.builder()
-                       .username(adminDetail.getEmail())
-                       .password(adminDetail.getPassword())
-                       .roles(adminDetail.getRole())  // Roles/authorities
-                       .build();
-        }
         // Find employee by email
-        Employee employeeDetail = employeeRepo.findByEmail(email);
-        if (employeeDetail != null) {
+        UserEntity userDetails = userRepo.findByEmail(email);
+        
+        if (userDetails != null) {
             // Return UserDetails object with employee details
             return User.builder()
-                       .username(employeeDetail.getEmail())
-                       .password(employeeDetail.getPassword())
-                       .roles(employeeDetail.getRole())  // Roles/authorities
+                       .username(userDetails.getEmail())
+                       .password(userDetails.getPassword())
+                       .roles(userDetails.getRole())  // Roles/authorities
                        .build();
         }
 
